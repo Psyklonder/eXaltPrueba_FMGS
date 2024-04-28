@@ -26,17 +26,13 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             _config = config;
         }
 
+        public async Task<List<ConsultarPedidosDTO>> ConsultarPedidos()
+        {
+            var registros = await _db.Pedido.Include(x => x.Usuario).ThenInclude(x => x.Persona).Include(x => x.PedidoDetalle).ToListAsync();
+            throw new NotImplementedException();
+        }
         public async Task<CrearPedidoClienteDTO> GuardarPedido(CrearPedidoClienteDTO request, ClaimsIdentity identity)
         {
-            /*
-             new Claim("IdUsuario", usuario.Id.ToString()),
-                new Claim("NombreCompleto", $"{usuario.Persona.Nombres} {usuario.Persona.Apellidos}"),
-                new Claim("Email", usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Rol.Codigo)
-
-             rolUsuario = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
-                idUsuario = identity.Claims.FirstOrDefault(x => x.Type == "UsuarioId").Value;
-             */
             //VALIDANDO SI EXISTE EL CLIENTE
             Guid usuarioId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UsuarioId").Value);
             if (!await ExisteCliente(usuarioId))
@@ -51,38 +47,6 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             else
             {
                 throw new Exception("Actualizar pedido no implementado.");
-            }
-        }
-
-        public async Task<string> CancelarPedido(Guid id, ClaimsIdentity identity)
-        {
-            Guid usuarioId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UsuarioId").Value);
-            //VALIDACIONES
-            var pedido = await ExistePedido(id, usuarioId);
-            if (pedido == null)
-            {
-                return "No existe el pedido.";
-            }
-
-            var estado = await _db.PedidoEstado.Where(x => x.Nombre.ToUpper().Trim() == EnumPedidoEstados.CANCELADO.ToString().ToUpper().Trim()).FirstOrDefaultAsync();
-            if (pedido.PedidoEstadoId.Equals(estado.Id))
-            {
-                return "El pedido ya fue cancelado.";
-            }
-
-            try
-            {
-                pedido.PedidoEstadoId = estado.Id;
-                pedido.Estado = false;
-                //EVITAR CONFLICTO AL ACTUALIZAR COLUMNA IDENTITY EN LA BASE DE DATOS
-                _db.Entry(pedido).Property(x => x.NumeroFactura).IsModified = false;
-                await _db.SaveChangesAsync();
-                await RetornarStockProductos(id);
-                return "Pedido cancelado.";
-            }
-            catch (Exception e)
-            {
-                throw;
             }
         }
 
@@ -114,6 +78,33 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
                 {
                     throw;
                 }
+            }
+        }
+
+        public async Task<string> CancelarPedido(Guid id, ClaimsIdentity identity)
+        {
+            Guid usuarioId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UsuarioId").Value);
+            //VALIDACIONES
+            var pedido = await ExistePedido(id, usuarioId);
+            if (pedido == null)
+            {
+                return "No existe el pedido.";
+            }
+
+            try
+            {
+                var estado = await _db.PedidoEstado.Where(x => x.Nombre.ToUpper().Trim() == EnumPedidoEstados.CANCELADO.ToString().ToUpper().Trim()).FirstOrDefaultAsync();
+                pedido.PedidoEstadoId = estado.Id;
+                pedido.Estado = false;
+                //EVITAR CONFLICTO AL ACTUALIZAR COLUMNA IDENTITY EN LA BASE DE DATOS
+                _db.Entry(pedido).Property(x => x.NumeroFactura).IsModified = false;
+                await _db.SaveChangesAsync();
+                await RetornarStockProductos(id);
+                return "Pedido cancelado.";
+            }
+            catch (Exception e)
+            {
+                throw;
             }
         }
 
@@ -290,6 +281,7 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             };
             EnviarCorreo.ConfirmarPedido(enviarCorreo);
         }
+
         #endregion
     }
 }

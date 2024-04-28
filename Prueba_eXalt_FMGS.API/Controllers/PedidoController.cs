@@ -21,6 +21,21 @@ namespace Prueba_eXalt_FMGS.API.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> ConsultarPedidos()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.ConsultarPedidos());
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "ADMIN,CLIENTE")]
         public async Task<IActionResult> GuardarPedido([FromBody] CrearPedidoClienteDTO request)
@@ -66,7 +81,7 @@ namespace Prueba_eXalt_FMGS.API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPut]
         [Authorize(Roles = "ADMIN,CLIENTE")]
         public async Task<IActionResult> CancelarPedido(Guid id)
         {

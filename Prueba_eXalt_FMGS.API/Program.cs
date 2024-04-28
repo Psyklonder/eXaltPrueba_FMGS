@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Prueba_eXalt_FMGS.API.InfraEstructura.Contratos;
+using Prueba_eXalt_FMGS.API.InfraEstructura.Encriptacion;
 using Prueba_eXalt_FMGS.API.InfraEstructura.Mapper;
 using Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios;
 using Prueba_eXalt_FMGS.DB.Context;
