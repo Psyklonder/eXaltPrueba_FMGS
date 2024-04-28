@@ -6,6 +6,7 @@ using Prueba_eXalt_FMGS.API.InfraEstructura.Encriptacion;
 using Prueba_eXalt_FMGS.DTO;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Claims;
 
 namespace Prueba_eXalt_FMGS.API.Controllers
 {
@@ -26,7 +27,8 @@ namespace Prueba_eXalt_FMGS.API.Controllers
         {
             try
             {
-                return Ok(await _repository.GuardarPedido(request));
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.GuardarPedido(request, identity));
             }
             catch (Exception error)
             {
@@ -40,7 +42,8 @@ namespace Prueba_eXalt_FMGS.API.Controllers
         {
             try
             {
-                return Ok(await _repository.FinalizarPedido(id));
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.FinalizarPedido(id, identity));
             }
             catch (Exception error)
             {
@@ -54,7 +57,8 @@ namespace Prueba_eXalt_FMGS.API.Controllers
         {
             try
             {
-                return Ok(await _repository.BorrarProducto(request));
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.BorrarProducto(request, identity));
             }
             catch (Exception error)
             {
@@ -68,8 +72,8 @@ namespace Prueba_eXalt_FMGS.API.Controllers
         {
             try
             {
-
-                return Ok(await _repository.CancelarPedido(id));
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.CancelarPedido(id, identity));
             }
             catch (Exception error)
             {

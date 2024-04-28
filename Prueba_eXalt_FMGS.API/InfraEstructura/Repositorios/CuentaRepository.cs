@@ -130,11 +130,10 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
             //Crear los claims
             var claims = new[] {
-                new Claim("IdUsuario", usuario.Id.ToString()),
+                new Claim("UsuarioId", usuario.Id.ToString()),
                 new Claim("NombreCompleto", $"{usuario.Persona.Nombres} {usuario.Persona.Apellidos}"),
                 new Claim("Email", usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Rol.Codigo),
-
+                new Claim(ClaimTypes.Role, usuario.Rol.Codigo)
             };
             //crear el token
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],

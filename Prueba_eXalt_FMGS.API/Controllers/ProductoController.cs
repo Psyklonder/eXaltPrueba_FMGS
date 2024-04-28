@@ -29,6 +29,7 @@ namespace Prueba_eXalt_FMGS.API.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 if (identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value.Trim() == EnumRoles.ADMIN.ToString())
                 {
+                    //SE RETORNAN TODOS LOS PRODUCTOS SIN IMPORTAR ESTEN ACTIVOS O NO
                     return Ok(await _repository.ConsultarProductos(true));
                 }
                 else
@@ -52,6 +53,7 @@ namespace Prueba_eXalt_FMGS.API.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 if (identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value.Trim() == EnumRoles.ADMIN.ToString())
                 {
+                    //SE RETORNAN EL PRODUCTO SIN IMPORTAR ESTÉ ACTIVO O NO
                     return Ok(await _repository.ConsultarProducto(id, true));
                 }
                 else
