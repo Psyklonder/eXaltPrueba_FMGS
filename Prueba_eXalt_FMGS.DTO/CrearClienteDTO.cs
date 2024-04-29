@@ -18,6 +18,7 @@ namespace Prueba_eXalt_FMGS.DTO
         //Usuario
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        
+        public string? AdminKey { get; set; }
+
     }
 }

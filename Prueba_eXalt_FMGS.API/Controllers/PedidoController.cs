@@ -36,6 +36,21 @@ namespace Prueba_eXalt_FMGS.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> ConsultarPedidoDetalle(Guid id)
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                return Ok(await _repository.ConsultarPedidoDetalle(id));
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "ADMIN,CLIENTE")]
         public async Task<IActionResult> GuardarPedido([FromBody] CrearPedidoClienteDTO request)
@@ -65,7 +80,8 @@ namespace Prueba_eXalt_FMGS.API.Controllers
                 return BadRequest(error.Message);
             }
         }
-
+        /*
+         IMPLEMENTACIÓN NO NECESARIA
         [HttpDelete]
         [Authorize(Roles = "ADMIN,CLIENTE")]
         public async Task<IActionResult> BorrarProductoPedido(BorrarProductoPedidoDTO request)
@@ -80,7 +96,7 @@ namespace Prueba_eXalt_FMGS.API.Controllers
                 return BadRequest(error.Message);
             }
         }
-
+        */
         [HttpPut]
         [Authorize(Roles = "ADMIN,CLIENTE")]
         public async Task<IActionResult> CancelarPedido(Guid id)

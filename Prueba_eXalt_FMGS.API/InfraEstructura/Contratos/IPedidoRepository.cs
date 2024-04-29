@@ -9,9 +9,11 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Contratos
         Task<CrearPedidoClienteDTO> GuardarPedido(CrearPedidoClienteDTO request, ClaimsIdentity identity);
         Task<string> FinalizarPedido(Guid id, ClaimsIdentity identity);
         Task<string> CancelarPedido(Guid id, ClaimsIdentity identity);
-        Task<string> BorrarProducto(BorrarProductoPedidoDTO request, ClaimsIdentity identity);
+       // Task<string> BorrarProducto(BorrarProductoPedidoDTO request, ClaimsIdentity identity);
         Task<List<ConsultarPedidosDTO>> ConsultarPedidos();
-        
+        Task<ConsultarPedidosDTO> ConsultarPedidoDetalle(Guid id);
+
+
 
     }
 }

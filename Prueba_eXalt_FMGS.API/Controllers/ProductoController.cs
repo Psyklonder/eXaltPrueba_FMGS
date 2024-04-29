@@ -68,7 +68,6 @@ namespace Prueba_eXalt_FMGS.API.Controllers
             }
         }
 
-
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> CrearProducto([FromBody] CrearProductoDTO request)

@@ -28,8 +28,30 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
 
         public async Task<List<ConsultarPedidosDTO>> ConsultarPedidos()
         {
-            var registros = await _db.Pedido.Include(x => x.Usuario).ThenInclude(x => x.Persona).Include(x => x.PedidoDetalle).ToListAsync();
-            throw new NotImplementedException();
+            try
+            {
+                var response = _mapper.Map<List<ConsultarPedidosDTO>>(await _db.Pedido.Include(x => x.Usuario).ThenInclude(x => x.Persona).Include(x => x.PedidoDetalle).Include(x => x.PedidoEstado).ToListAsync());                
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<ConsultarPedidosDTO> ConsultarPedidoDetalle(Guid id)
+        {
+            try
+            {
+                var registro= await _db.Pedido.Include(x => x.Usuario).ThenInclude(x => x.Persona).Include(x => x.PedidoDetalle).ThenInclude(x=>x.Producto).Include(x => x.PedidoEstado).Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
+                var response = _mapper.Map<ConsultarPedidosDTO>(registro);
+                response.Detalle = _mapper.Map<List<ConsultarPedidoDetalleDTO>>(registro.PedidoDetalle);
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         public async Task<CrearPedidoClienteDTO> GuardarPedido(CrearPedidoClienteDTO request, ClaimsIdentity identity)
         {
@@ -108,6 +130,7 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             }
         }
 
+        /*
         public async Task<string> BorrarProducto(BorrarProductoPedidoDTO request, ClaimsIdentity identity)
         {
             Guid usuarioId = Guid.Parse(identity.Claims.FirstOrDefault(x => x.Type == "UsuarioId").Value);
@@ -142,7 +165,7 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
                 throw;
             }
         }
-
+        */
         #region Metodos privados
         async Task<CrearPedidoClienteDTO> NuevoPedido(CrearPedidoClienteDTO request, Guid usuarioId)
         {

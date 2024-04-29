@@ -32,7 +32,12 @@ namespace Prueba_eXalt_FMGS.API.InfraEstructura.Repositorios
             {
                 return "Ya existe un usuario registrado con el correo electrónico suministrado.";
             }
-            var RolCliente = await _db.Rol.Where(x => x.Codigo.ToUpper().Trim() == EnumRoles.CLIENTE.ToString()).FirstOrDefaultAsync();
+
+            //ASIGNACIÓN DE ROL DEPENDIENDO DE LLAVE ADMINISTRADOR
+            var RolCliente = request.AdminKey != null && request.AdminKey == _config["Cuenta:AdminKey"].ToString() ?
+                await _db.Rol.Where(x => x.Codigo.ToUpper().Trim() == EnumRoles.ADMIN.ToString()).FirstOrDefaultAsync() :
+                await _db.Rol.Where(x => x.Codigo.ToUpper().Trim() == EnumRoles.CLIENTE.ToString()).FirstOrDefaultAsync();
+
             if (RolCliente == null)
             {
                 return "No se puede crear el cliente. Por favor contacte al administrador del sistema.";

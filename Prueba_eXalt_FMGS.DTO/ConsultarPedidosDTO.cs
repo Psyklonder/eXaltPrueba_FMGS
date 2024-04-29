@@ -14,6 +14,7 @@ namespace Prueba_eXalt_FMGS.DTO
         public long NumeroFactura { get; set; }
         public string Estado { get; set; } = "";
         public decimal ValorTotal { get; set; }
-        public int CantidadProductos { get; set; }
+        public int CantidadReferencias{ get; set; }
+        public List<ConsultarPedidoDetalleDTO>? Detalle { get; set; }
     }
 }
